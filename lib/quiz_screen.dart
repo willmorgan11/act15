@@ -48,7 +48,8 @@ class _QuizScreenState extends State<QuizScreen> {
   void _handleAnswer(String selected) {
     if (_answered) return; // guard: ignore taps after first answer
 
-    final correct = _questions[_currentQuestionIndex].correctAnswer;
+    final question = _questions[_currentQuestionIndex];
+    final correct = question.options[question.correctAnswer];
 
     setState(() {
       _answered = true;
@@ -109,7 +110,9 @@ class _QuizScreenState extends State<QuizScreen> {
   Color _buttonColor(String option) {
     if (!_answered) return Colors.indigo;
 
-    final correct = _questions[_currentQuestionIndex].correctAnswer;
+    final question = _questions[_currentQuestionIndex];
+    final correct = question.options[question.correctAnswer];
+
     if (option == correct) return Colors.green;
     if (option == _selectedAnswer) return Colors.red;
     return Colors.grey;
@@ -231,9 +234,11 @@ class _QuizScreenState extends State<QuizScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
+                    disabledBackgroundColor: _buttonColor(option),
+                    disabledForegroundColor: Colors.white,
                   ),
                   // disable all buttons once answered
-                  onPressed: _answered ? null : () => _handleAnswer(option),
+                  onPressed: _answered ? () {} : () => _handleAnswer(option),
                   child: Text(option, style: const TextStyle(fontSize: 16)),
                 ),
               );
